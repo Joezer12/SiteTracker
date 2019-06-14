@@ -1,0 +1,4 @@
+*.module.ts
+*.spec.json
+tsconfig.json
+tslint.json
