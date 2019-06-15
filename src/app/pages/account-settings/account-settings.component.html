@@ -1,0 +1,104 @@
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Temas</h4>
+                <hr />
+                <div class="r-panel-body">
+                    <ul id="themecolors" class="m-t-20">
+                        <li><b>Con el sidebar claro</b></li>
+                        <li>
+                            <a
+                                #themedefault
+                                (click)="changeTheme('default', themedefault)"
+                                data-theme="default"
+                                class="selector default-theme"
+                            >
+                                1
+                            </a>
+                        </li>
+                        <li>
+                            <a #themegreen (click)="changeTheme('green', themegreen)" data-theme="green" class="selector green-theme">2</a>
+                        </li>
+                        <li>
+                            <a #themered (click)="changeTheme('red', themered)" data-theme="red" class="selector red-theme">3</a>
+                        </li>
+                        <li>
+                            <a #themeblue (click)="changeTheme('blue', themeblue)" data-theme="blue" class="selector blue-theme">4</a>
+                        </li>
+                        <li>
+                            <a #themepurple (click)="changeTheme('purple', themepurple)" data-theme="purple" class="selector purple-theme">
+                                5
+                            </a>
+                        </li>
+                        <li>
+                            <a #thememegna (click)="changeTheme('megna', thememegna)" data-theme="megna" class="selector megna-theme">6</a>
+                        </li>
+
+                        <li class="d-block m-t-30"><b>Con el sidebar oscuro</b></li>
+                        <li>
+                            <a
+                                #themedefaultDark
+                                (click)="changeTheme('default-dark', themedefaultDark)"
+                                data-theme="default-dark"
+                                class="selector default-dark-theme"
+                            >
+                                7
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                #themegreenDark
+                                (click)="changeTheme('green-dark', themegreenDark)"
+                                data-theme="green-dark"
+                                class="selector green-dark-theme"
+                            >
+                                8
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                #themeredDark
+                                (click)="changeTheme('red-dark', themeredDark)"
+                                data-theme="red-dark"
+                                class="selector red-dark-theme"
+                            >
+                                9
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                #themeblueDark
+                                (click)="changeTheme('blue-dark', themeblueDark)"
+                                data-theme="blue-dark"
+                                class="selector blue-dark-theme"
+                            >
+                                10
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                #themepurpleDark
+                                (click)="changeTheme('purple-dark', themepurpleDark)"
+                                data-theme="purple-dark"
+                                class="selector purple-dark-theme"
+                            >
+                                11
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                #thememegnaDark
+                                (click)="changeTheme('megna-dark', thememegnaDark)"
+                                data-theme="megna-dark"
+                                class="selector megna-dark-theme"
+                            >
+                                12
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
