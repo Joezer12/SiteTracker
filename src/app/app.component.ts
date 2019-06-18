@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SettingsService } from './services/settings.service';
+import { SettingsService } from './services/settings/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,5 @@ import { SettingsService } from './services/settings.service';
 })
 export class AppComponent {
   title = 'adminpro';
-  constructor(private settings: SettingsService) {
-    this.settings.loadSettings();
-  }
+  constructor(private settings: SettingsService) {}
 }

@@ -8,8 +8,16 @@ import { LoginModule } from './login/login.module';
 import { PagesModule } from './pages/pages.module';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, LoginModule, PagesModule, AppRoutingModule, FormsModule],
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    LoginModule,
+    PagesModule,
+    AppRoutingModule,
+    FormsModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
