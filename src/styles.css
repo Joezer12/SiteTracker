@@ -12,3 +12,7 @@ input[type='number'] {
 .selector {
   cursor: pointer;
 }
+
+.sidebar-nav a:not([href]):not([tabindex]):hover {
+  color: #fff !important;
+}
