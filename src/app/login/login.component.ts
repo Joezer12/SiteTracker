@@ -39,34 +39,23 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  attachedSignin(element: HTMLElement) {
-    this.auth2.attachClickHandler(element, {}, googleUser => {
+  attachedSignin(elemento: HTMLElement) {
+    this.auth2.attachClickHandler(elemento, {}, googleUser => {
       // let profile = googleUser.getBasicProfile();
       const token = googleUser.getAuthResponse().id_token;
-      this.usuarioService.loginGoogle(token).subscribe(resp => {
-        console.log(resp);
-        this.registrarUsuario(resp);
-      });
+      console.log(token);
+      this.usuarioService.loginGoogle(token).subscribe(resp => (window.location.href = '#/dashboard'));
     });
   }
 
   ingresar(forma: NgForm) {
     this.usuarioService.autenticarUsuario(forma.value.email, forma.value.password).subscribe((resp: any) => {
-      console.log(resp);
       if (forma.value.recordarme) {
         localStorage.setItem('email', forma.value.email);
       } else {
         localStorage.removeItem('email');
       }
-
-      this.registrarUsuario(resp);
+      this.router.navigate(['/dashboard']);
     });
-  }
-
-  registrarUsuario(resp: any) {
-    localStorage.setItem('token', resp.token);
-    localStorage.setItem('usuario', JSON.stringify(resp.usuario));
-    window.location.href = '#/dashboard';
-    // this.router.navigate(['/dashboard']);
   }
 }
