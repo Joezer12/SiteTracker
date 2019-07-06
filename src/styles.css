@@ -21,3 +21,16 @@ input[type='number'] {
   width: 300px;
   height: 300px;
 }
+
+.img-75 {
+  width: 75px;
+  height: 75px;
+}
+
+.wid-100 {
+  width: 100px;
+}
+
+.wid-150 {
+  width: 150px;
+}

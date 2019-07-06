@@ -10,6 +10,10 @@ import { PromesasComponent } from './promesas/promesas.component';
 import { RxjsComponent } from './rxjs/rxjs.component';
 import { LoginGuardGuard } from '../services/guards/login-guard.guard';
 import { ProfileComponent } from './profile/profile.component';
+import { UsuariosComponent } from './usuarios/usuarios.component';
+import { HospitalesComponent } from './hospitales/hospitales.component';
+import { MedicosComponent } from './medicos/medicos.component';
+import { Title } from '@angular/platform-browser';
 
 const pagesRoutes: Routes = [
   {
@@ -47,6 +51,22 @@ const pagesRoutes: Routes = [
         path: 'profile',
         component: ProfileComponent,
         data: { titulo: 'Perfil', path: ['Perfil'] }
+      },
+      // ============================== MANTENIMIENTO ==============================
+      {
+        path: 'usuarios',
+        component: UsuariosComponent,
+        data: { titulo: 'Usuarios', path: ['Mantenimiento', 'Usuarios'] }
+      },
+      {
+        path: 'hospitales',
+        component: HospitalesComponent,
+        data: { titulo: 'Hospitales', path: ['Mantenimiento', 'Hospitales'] }
+      },
+      {
+        path: 'medicos',
+        component: MedicosComponent,
+        data: { titulo: 'Médicos', path: ['Mantenimiento', 'Médicos'] }
       },
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' }
     ]

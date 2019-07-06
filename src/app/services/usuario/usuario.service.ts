@@ -21,10 +21,14 @@ export class UsuarioService {
     this.params = new HttpParams().set('token', this.token);
   }
 
+  // ============================== REVISA SI EXISTE UN TOKEN EN EL LOCALSTORAGE ==============================
   isLogged() {
     return localStorage.getItem('token') ? true : false;
   }
 
+  // ===================================================================================================
+  // REGISTRO -- CREA UN NUEVO USARIO DE LA PAGINA REGISTRO
+  // ===================================================================================================
   crearUsuario(usuario: Usuario) {
     const url = URL_SERVICIOS + '/usuario';
     return this.http.post(url, usuario).pipe(
@@ -38,6 +42,9 @@ export class UsuarioService {
     );
   }
 
+  // ===================================================================================================
+  // UPDATE -- ACTUALIZA LOS DATOS DE UN USUARIO DE LA PAGINA PROFILE
+  // ===================================================================================================
   actualizarUsuario(usuario: any) {
     const url = URL_SERVICIOS + `/usuario/${usuario._id}`;
     return this.http.put(url, usuario, { params: this.params }).pipe(
@@ -53,6 +60,9 @@ export class UsuarioService {
     );
   }
 
+  // ===================================================================================================
+  // LOGIN -- AUTENTICA POR MEDIO DE GOOGLE
+  // ===================================================================================================
   loginGoogle(token: string) {
     const url = URL_SERVICIOS + '/login/google';
     return this.http.post(url, { token }).pipe(
@@ -63,6 +73,9 @@ export class UsuarioService {
     );
   }
 
+  // ===================================================================================================
+  // LOGIN -- AUTENTICA POR MEDIO DE EMAIL
+  // ===================================================================================================
   autenticarUsuario(email: string, password: string) {
     const url = URL_SERVICIOS + '/login';
     return this.http.post(url, { email, password }).pipe(
@@ -73,6 +86,9 @@ export class UsuarioService {
     );
   }
 
+  // ===================================================================================================
+  // LOGOUT -- Remueve informacion del localstorage
+  // ===================================================================================================
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
@@ -80,23 +96,26 @@ export class UsuarioService {
     this.router.navigate(['/login']);
   }
 
+  // ===================================================================================================
+  // LOCALSTORAGE -- GUARDA EN LOCALSTORAGE
+  // ===================================================================================================
   registrarUsuario(resp: any) {
     if (resp.id) {
-      console.log('Guardando id en localStorage');
       localStorage.setItem('id', resp.id);
     }
     if (resp.token) {
-      console.log('Guardando token en localStorage');
       localStorage.setItem('token', resp.token);
       this.token = resp.token;
     }
     if (resp.usuario) {
-      console.log('Guardando usuario en localStorage');
       localStorage.setItem('usuario', JSON.stringify(resp.usuario));
       this.usuario = resp.usuario;
     }
   }
 
+  // ===================================================================================================
+  // CARGAR FOTOGRAFIA -- POR VANILLA JS
+  // ===================================================================================================
   // actualizarImagen(archivo: File) {
   //   this.subirImagenService
   //     .subirArchivo(archivo, 'usuario', this.usuario._id)
@@ -114,6 +133,9 @@ export class UsuarioService {
   //     });
   // }
 
+  // ===================================================================================================
+  // CARGAR FOTOGRAFIA -- HTTPCLIENT APARTIR DE ANGULAR 6 O 7
+  // ===================================================================================================
   actualizarImagen(archivo: File) {
     this.subirImagenService.fileUpload(archivo, 'usuario', this.usuario._id).subscribe((resp: any) => {
       this.usuario.img = resp.usuario.img;
@@ -124,5 +146,29 @@ export class UsuarioService {
         type: 'success'
       });
     });
+  }
+
+  // ===================================================================================================
+  // USUARIOS TODOS -- RECOLECTA LOS USUARIOS DE LA DB
+  // ===================================================================================================
+  getUsuarios(desde?: number) {
+    let url = URL_SERVICIOS + '/usuario';
+    if (desde) {
+      url += `?desde=${desde}`;
+    }
+    return this.http.get(url);
+  }
+
+  // ===================================================================================================
+  // USUARIOS BUSCAR -- Busca usuarios por colección y termino, en este caso la colección es 'usuario'
+  // ===================================================================================================
+  buscarUsuarios(termino: string, desde: number = 0) {
+    const url = URL_SERVICIOS + `/busqueda/usuarios/${termino}?desde=${desde}`;
+    return this.http.get(url);
+  }
+
+  borrarUsuario(id: string) {
+    const url = URL_SERVICIOS + '/usuario/' + id;
+    return this.http.delete(url);
   }
 }

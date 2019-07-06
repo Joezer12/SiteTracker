@@ -1,0 +1,88 @@
+<div class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <input
+                    #buscarInput
+                    (keyup)="buscarUsuarios(buscarInput.value)"
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar usuario..."
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!usuarios" class="row animated fadeIn">
+    <div class="col-12 class alert-info text-center py-3">
+        <strong class="font-bold">Cargando</strong>
+        <br />
+        <i class="fa fa-refresh fa-spin fa-2x my-3"></i>
+        <br />
+        <span>Espere por favor</span>
+    </div>
+</div>
+
+<div *ngIf="usuarios" class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Usuarios registrados (
+                    <small>{{ total }}</small>
+                    )
+                </h3>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Correo</th>
+                            <th>Nombre</th>
+                            <th>Role</th>
+                            <th>Auth</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let usuario of usuarios">
+                            <td class="align-middle wid-100">
+                                <img [src]="usuario.img | imagen" alt="" width="75" height="75" />
+                            </td>
+                            <td class="align-middle">{{ usuario.email }}</td>
+                            <td class="align-middle">{{ usuario.nombre }}</td>
+                            <td class="align-middle">{{ usuario.role }}</td>
+                            <td class="align-middle">
+                                <label *ngIf="usuario.google" class="label label-danger">Google</label>
+                                <label *ngIf="!usuario.google" class="label label-info">Normal</label>
+                            </td>
+                            <td>
+                                <div class="align-middle wid-150">
+                                    <button class="btn btn-facebook"><i class="fa fa-save"></i></button>
+                                    <button
+                                        (click)="borrarUsuario(usuario)"
+                                        class="btn btn-danger ml-2"
+                                        [disabled]="usuario.email === usuarioSession.email"
+                                    >
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between animated fadeIn p-4 align-items-center">
+                <button class="btn btn-info h-50" (click)="actualizarTabla(-5)" [disabled]="desde < 1">
+                    <i class="fa fa-arrow-left"></i>
+                    Anteriores
+                </button>
+                <span class="d-flex d-inline-block align-items-center">Mostrando usuarios del {{ page }}</span>
+                <button class="btn btn-info h-50" (click)="actualizarTabla(5)" [disabled]="desde + 5 >= total">
+                    Siguientes
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
