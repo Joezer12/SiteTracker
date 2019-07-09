@@ -1,31 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UsuarioService } from '../../services/usuario/usuario.service';
-import { Usuario } from 'src/app/models/usuario.model';
 import { SubirImagenService } from '../../services/subir-imagen/subir-imagen.service';
-import { LoginComponent } from '../../login/login.component';
 import Swal from 'sweetalert2';
+import { ModalUploadService } from './modal-upload.service';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
+  selector: 'app-modal-upload',
+  templateUrl: './modal-upload.component.html',
   styles: []
 })
-export class ProfileComponent implements OnInit {
-  usuario: Usuario;
+export class ModalUploadComponent implements OnInit {
+  modalDisplay: boolean;
   imagenUpload: File;
   imagenTemp: string;
-  constructor(private usuarioService: UsuarioService, private imagenService: SubirImagenService) {}
+  constructor(private subirImagenService: SubirImagenService, public modalUploadService: ModalUploadService) {}
 
   ngOnInit() {
-    this.usuario = this.usuarioService.usuario;
+    this.modalDisplay = this.modalUploadService.oculto;
   }
 
-  actualizar(usuario: Usuario) {
-    this.usuario.nombre = usuario.nombre;
-    if (!this.usuario.google) {
-      this.usuario.email = usuario.email;
-    }
-    this.usuarioService.actualizarUsuario(this.usuario).subscribe();
+  ocultarModal() {
+    this.imagenUpload = null;
+    this.imagenTemp = null;
+    this.modalDisplay = this.modalUploadService.ocultarModal();
   }
 
   imagenSeleccionada(archivo: File) {
@@ -53,7 +50,19 @@ export class ProfileComponent implements OnInit {
   }
 
   actualizarImagen() {
-    this.usuarioService.actualizarImagen(this.imagenUpload);
+    this.subirImagenService
+      .fileUpload(this.imagenUpload, this.modalUploadService.tipo, this.modalUploadService.id)
+      .subscribe(
+        resp => {
+          console.log(resp);
+          this.modalUploadService.notificacion.emit(resp);
+          this.ocultarModal();
+        },
+        error => {
+          console.log('error');
+        }
+      );
+
     // this.imagenService.fileUpload(this.imagenUpload, 'usuario', this.usuarioService.usuario._id).subscribe();
   }
 }

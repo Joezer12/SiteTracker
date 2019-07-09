@@ -16,6 +16,8 @@ export class UsuarioService {
   params: HttpParams;
 
   constructor(private http: HttpClient, private router: Router, private subirImagenService: SubirImagenService) {
+    console.log('Inicianzo Servicio');
+
     this.usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
     this.token = localStorage.getItem('token') || '';
     this.params = new HttpParams().set('token', this.token);
@@ -81,6 +83,7 @@ export class UsuarioService {
     return this.http.post(url, { email, password }).pipe(
       map(resp => {
         this.registrarUsuario(resp);
+
         return true;
       })
     );
@@ -93,6 +96,10 @@ export class UsuarioService {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     localStorage.removeItem('id');
+
+    this.usuario = null;
+    this.token = '';
+
     this.router.navigate(['/login']);
   }
 
@@ -101,15 +108,22 @@ export class UsuarioService {
   // ===================================================================================================
   registrarUsuario(resp: any) {
     if (resp.id) {
+      console.log('id', resp.id);
       localStorage.setItem('id', resp.id);
     }
     if (resp.token) {
+      console.log('Token inicial', this.token);
+
       localStorage.setItem('token', resp.token);
       this.token = resp.token;
+      console.log('token', this.token);
     }
     if (resp.usuario) {
+      console.log('Usuario inicial', this.usuario);
+
       localStorage.setItem('usuario', JSON.stringify(resp.usuario));
       this.usuario = resp.usuario;
+      console.log('usuario', this.usuario);
     }
   }
 
@@ -169,6 +183,14 @@ export class UsuarioService {
 
   borrarUsuario(id: string) {
     const url = URL_SERVICIOS + '/usuario/' + id;
-    return this.http.delete(url);
+    return this.http.delete(url, { params: this.params }).pipe(
+      map(resp => {
+        if (id === this.usuario._id) {
+          Swal.fire('Accion no permitida', 'No puede borrarse a si mismo', 'error');
+        } else {
+          Swal.fire('Borrado', 'El usuario ha sido eliminado de la BD', 'success');
+        }
+      })
+    );
   }
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UsuarioService } from '../../services/usuario/usuario.service';
 import { Usuario } from '../../models/usuario.model';
 import Swal from 'sweetalert2';
+import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -15,12 +16,21 @@ export class UsuariosComponent implements OnInit {
   desde = 0;
   page: string;
   private busqueda: string;
-  constructor(private usuarioService: UsuarioService) {}
+
+  constructor(private usuarioService: UsuarioService, private modalUploadService: ModalUploadService) {}
 
   ngOnInit() {
     this.getUsuarios();
     this.usuarioSession = this.usuarioService.usuario;
     this.busqueda = '';
+    this.modalUploadService.notificacion.subscribe(resp => this.actualizarTabla(0));
+  }
+
+  // ===================================================================================================
+  // MODAL -- Método para mostar un modal que contenga parametros
+  // ===================================================================================================
+  mostrarModal(id: string) {
+    this.modalUploadService.mostarModal('usuario', id);
   }
 
   // ===================================================================================================
@@ -75,15 +85,51 @@ export class UsuariosComponent implements OnInit {
   }
 
   // ===================================================================================================
+  // ACTUALIZAR USUARIO -- Para modificar el ROLE de un usario
+  // ===================================================================================================
+  guardar(usuario: Usuario) {
+    if (usuario._id === this.usuarioSession._id) {
+      Swal.fire({
+        title: 'Acción no reversible',
+        text: 'Seguro que desea cambiar su role, una vez realizada esta acción no podrá modificarla',
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        cancelButtonColor: '#ef5350'
+      }).then(aceptar => {
+        if (aceptar.value) {
+          this.usuarioService.actualizarUsuario(usuario).subscribe();
+        }
+      });
+    } else {
+      this.usuarioService.actualizarUsuario(usuario).subscribe();
+    }
+  }
+  // ===================================================================================================
   // BORRAR USUARIO -- Método para borrar un usuario desde el botón BORRAR de la tabla.
   // ===================================================================================================
   borrarUsuario(usuario: Usuario) {
-    this.usuarioService.borrarUsuario(usuario._id).subscribe(resp => {
-      Swal.fire({
-        type: 'success',
-        title: 'Usuario eliminado',
-        text: 'Se ha eliminado el usuario correctamente'
-      });
+    Swal.fire({
+      type: 'warning',
+      title: 'Desea borrar a ' + usuario.nombre + '?',
+      text: 'No se podrá revertir la acción una vez eliminado el usuario',
+      showCancelButton: true,
+      confirmButtonText: 'Borrar usuario',
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: '#ef5350'
+    }).then(borrar => {
+      if (borrar.value) {
+        this.usuarioService.borrarUsuario(usuario._id).subscribe(resp => {
+          if (this.total <= this.desde + 1) {
+            this.desde -= 5;
+          }
+          if (!this.busqueda) {
+            this.getUsuarios();
+          } else {
+            this.buscarUsuarios(this.busqueda);
+          }
+        });
+      }
     });
   }
 }

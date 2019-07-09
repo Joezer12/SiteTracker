@@ -1,0 +1,28 @@
+<div class="fondo animated fadeIn" [ngClass]="{ 'fast display-none': modalUploadService.oculto }">
+    <div class="modal" style="display: block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Actualizar Imagén</h4>
+                    <button (click)="ocultarModal()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h6 class="card-subtitle">nombre</h6>
+                    <div class="text-center">
+                        <img *ngIf="imagenTemp" [src]="imagenTemp" class="card-img-bottom img-preview" />
+                        <img *ngIf="!imagenTemp" [src]="'xxx' | imagen" class="card-img-bottom img-preview" />
+                    </div>
+                    <input (change)="imagenSeleccionada($event.target.files[0])" name="imagenUpload" type="file" class="fileinput mt-3" />
+                </div>
+                <div class="modal-footer">
+                    <button (click)="ocultarModal()" type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button (click)="actualizarImagen()" type="button" class="btn btn-info" [disabled]="!imagenTemp">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
