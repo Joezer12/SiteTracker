@@ -14,6 +14,7 @@ import { UsuariosComponent } from './usuarios/usuarios.component';
 import { HospitalesComponent } from './hospitales/hospitales.component';
 import { MedicosComponent } from './medicos/medicos.component';
 import { Title } from '@angular/platform-browser';
+import { MedicoComponent } from './medicos/medico.component';
 
 const pagesRoutes: Routes = [
   {
@@ -67,6 +68,11 @@ const pagesRoutes: Routes = [
         path: 'medicos',
         component: MedicosComponent,
         data: { titulo: 'Médicos', path: ['Mantenimiento', 'Médicos'] }
+      },
+      {
+        path: 'medico/:id',
+        component: MedicoComponent,
+        data: { titulo: 'Médico', path: ['Mantenimiento', 'Médico'] }
       },
       { path: '', pathMatch: 'full', redirectTo: '/dashboard' }
     ]

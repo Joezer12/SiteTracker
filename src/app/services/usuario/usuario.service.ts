@@ -16,16 +16,14 @@ export class UsuarioService {
   params: HttpParams;
 
   constructor(private http: HttpClient, private router: Router, private subirImagenService: SubirImagenService) {
-    console.log('Inicianzo Servicio');
-
-    this.usuario = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
-    this.token = localStorage.getItem('token') || '';
+    this.usuario = sessionStorage.getItem('usuario') ? JSON.parse(sessionStorage.getItem('usuario')) : null;
+    this.token = sessionStorage.getItem('token') || '';
     this.params = new HttpParams().set('token', this.token);
   }
 
-  // ============================== REVISA SI EXISTE UN TOKEN EN EL LOCALSTORAGE ==============================
+  // ============================== REVISA SI EXISTE UN TOKEN EN EL SESSIONSTORAGE ==============================
   isLogged() {
-    return localStorage.getItem('token') ? true : false;
+    return sessionStorage.getItem('token') ? true : false;
   }
 
   // ===================================================================================================
@@ -52,7 +50,7 @@ export class UsuarioService {
     return this.http.put(url, usuario, { params: this.params }).pipe(
       map((resp: any) => {
         this.usuario = resp.usuario;
-        localStorage.setItem('usuario', JSON.stringify(resp.usuario));
+        sessionStorage.setItem('usuario', JSON.stringify(resp.usuario));
         Swal.fire({
           type: 'success',
           title: 'Usuario Actualizado',
@@ -90,12 +88,12 @@ export class UsuarioService {
   }
 
   // ===================================================================================================
-  // LOGOUT -- Remueve informacion del localstorage
+  // LOGOUT -- Remueve informacion del sessionStorage
   // ===================================================================================================
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('id');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('usuario');
+    sessionStorage.removeItem('id');
 
     this.usuario = null;
     this.token = '';
@@ -104,26 +102,19 @@ export class UsuarioService {
   }
 
   // ===================================================================================================
-  // LOCALSTORAGE -- GUARDA EN LOCALSTORAGE
+  // SESSIONSTORAGE -- GUARDA EN SESSIONSTORAGE
   // ===================================================================================================
   registrarUsuario(resp: any) {
     if (resp.id) {
-      console.log('id', resp.id);
-      localStorage.setItem('id', resp.id);
+      sessionStorage.setItem('id', resp.id);
     }
     if (resp.token) {
-      console.log('Token inicial', this.token);
-
-      localStorage.setItem('token', resp.token);
+      sessionStorage.setItem('token', resp.token);
       this.token = resp.token;
-      console.log('token', this.token);
     }
     if (resp.usuario) {
-      console.log('Usuario inicial', this.usuario);
-
-      localStorage.setItem('usuario', JSON.stringify(resp.usuario));
+      sessionStorage.setItem('usuario', JSON.stringify(resp.usuario));
       this.usuario = resp.usuario;
-      console.log('usuario', this.usuario);
     }
   }
 

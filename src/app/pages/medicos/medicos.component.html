@@ -1,3 +1,108 @@
-<p>
-  medicos works!
-</p>
+<div class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <input
+                    #buscarInput
+                    (keyup)="buscarMedico(buscarInput.value)"
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar médico..."
+                />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="!medicos" class="row animated fadeIn">
+    <div class="col-12 class alert-info text-center py-3">
+        <strong class="font-bold">Cargando</strong>
+        <br />
+        <i class="fa fa-refresh fa-spin fa-2x my-3"></i>
+        <br />
+        <span>Espere por favor</span>
+    </div>
+</div>
+
+<div *ngIf="medicos" class="row animated fadeIn">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h3 class="card-title">
+                        Médicos registrados (
+                        <small>{{ total }}</small>
+                        )
+                    </h3>
+                    <button type="button" [routerLink]="['/medico', 'nuevo']" class="btn btn-info d-inline btn-rounded">
+                        <i class="fa fa-plus"></i>
+                        Agregar Médico
+                    </button>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Nombre</th>
+                            <th>Hospital</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let medico of medicos">
+                            <td class="align-middle wid-100">
+                                <img
+                                    [title]="medico._id"
+                                    (click)="mostrarModal(medico._id)"
+                                    [src]="medico.img | imagen: 'medico'"
+                                    class="selector"
+                                    width="75"
+                                    height="75"
+                                />
+                            </td>
+                            <td class="align-middle">
+                                <input
+                                    class="form-control input-form"
+                                    [(ngModel)]="medico.nombre"
+                                    type="text"
+                                    name="nombre"
+                                    [value]="medico.nombre"
+                                />
+                            </td>
+                            <td *ngIf="medico.hospital">
+                                {{ medico.hospital.nombre }}
+                            </td>
+                            <td *ngIf="!medico.hospital">
+                                Sin asignar
+                            </td>
+                            <td>
+                                <div class="align-middle wid-150">
+                                    <button [routerLink]="['/medico', medico._id]" class="btn btn-facebook">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button (click)="borrarMedico(medico)" class="btn btn-danger ml-2">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-between animated fadeIn p-4 align-items-center">
+                <button class="btn btn-info h-50" (click)="actualizarTabla(-5)" [disabled]="desde < 1">
+                    <i class="fa fa-arrow-left"></i>
+                    Anteriores
+                </button>
+                <span *ngIf="page === 'Sin resultados'" class="d-flex d-inline-block align-items-center">{{ page }}</span>
+                <span *ngIf="page !== 'Sin resultados'" class="d-flex d-inline-block align-items-center">
+                    Mostrando hospitales del {{ page }}
+                </span>
+                <button class="btn btn-info h-50" (click)="actualizarTabla(5)" [disabled]="desde + 5 >= total">
+                    Siguientes
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

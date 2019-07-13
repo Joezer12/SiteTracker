@@ -1,0 +1,87 @@
+<div class="row animated fast fadeIn">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Datos del Médico</h4>
+                <h6 *ngIf="!medico._id" class="card-subtitle">Indique los datos del médico que desea agregar</h6>
+                <form ngNativeValidate #f="ngForm" (submit)="actualizar(f)" class="form p-t-20">
+                    <div class="form-group">
+                        <label for="exampleInputuname">Nombre del médico</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="ti-user"></i></div>
+                            <input
+                                [(ngModel)]="medico.nombre"
+                                name="nombre"
+                                type="text"
+                                class="form-control"
+                                placeholder="Nombre del Médico"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Hospital asignado</label>
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="mdi mdi-hospital-building"></i></div>
+                            <select
+                                (change)="cambioHospital($event.target.value)"
+                                [(ngModel)]="medico.hospital"
+                                name="hospital"
+                                class="form-control wid-150"
+                                required
+                            >
+                                <option value="">Seleccione un hospital</option>
+                                <option *ngFor="let hospital of hospitales" [value]="hospital._id">{{ hospital.nombre }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-block btn-info waves-effect waves-light m-r-10">
+                        <i class="fa fa-save"></i>
+                        Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="row">
+            <div class="col-sm-12 col-lg-8 card">
+                <div class="card-body">
+                    <h4 class="card-title">Fotografía de Médico</h4>
+                    <h6 class="card-subtitle">{{ medico.nombre }}</h6>
+                    <div class="text-center">
+                        <img *ngIf="imagenMedicoTemp" [src]="imagenMedicoTemp" class="card-img-bottom img-thumb" />
+                        <img *ngIf="!imagenMedicoTemp" [src]="medico.img | imagen" class="card-img-bottom img-thumb" />
+                    </div>
+                    <input
+                        (change)="imagenMedicoSeleccionada($event.target.files[0])"
+                        name="imagenMedico"
+                        type="file"
+                        class="fileinput w-100 mt-3"
+                    />
+                    <button
+                        type="button"
+                        class="btn btn-info btn-block waves-effect waves-light mt-3"
+                        (click)="actualizarImagen()"
+                        [disabled]="!imagenMedico"
+                        [ngStyle]="{ cursor: imagenUpload ? 'pointer' : 'default' }"
+                    >
+                        <i class="fa fa-pencil-square-o"></i>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-8 card">
+                <div class="card-body">
+                    <h4 class="card-title">Imagen de Hospital</h4>
+                    <h6 *ngIf="medico.hospital" class="card-subtitle">{{ medico.hospital }}</h6>
+                    <h6 *ngIf="!medico.hospital" class="card-subtitle">Sin asignar a un Hospital</h6>
+                    <div class="text-center">
+                        <img *ngIf="imagenHospitalTemp" [src]="imagenHospitalTemp" class="card-img-bottom img-thumb" />
+                        <img *ngIf="!imagenHospitalTemp" [src]="medico.img | imagen" class="card-img-bottom img-thumb" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
