@@ -35,7 +35,7 @@ export class HospitalService {
 
   getHospital(id: string) {
     const url = URL_SERVICIOS + '/hospital/' + id;
-    return this.http.get(url).pipe(map((resp: any) => resp.hospital));
+    return this.http.get(url, { params: this.paramsToken }).pipe(map((resp: any) => resp.hospital));
   }
 
   crearHospital(nombre: string) {

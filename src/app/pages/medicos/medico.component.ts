@@ -5,7 +5,7 @@ import { Hospital } from 'src/app/models/hospital.model';
 import { MedicoService } from '../../services/medico/medico.service';
 import { HospitalService } from '../../services/hospital/hospital.service';
 import { ModalUploadService } from '../../components/modal-upload/modal-upload.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 export class MedicoComponent implements OnInit {
   medico = new Medico('', '', '', '');
   hospitales: Hospital[];
+  hospital = new Hospital('');
   imagenHospitalTemp: string;
   imagenMedicoTemp: string;
   id: string;
@@ -26,12 +27,15 @@ export class MedicoComponent implements OnInit {
     private medicoService: MedicoService,
     private hospitalService: HospitalService,
     private activatedRoute: ActivatedRoute,
-    public modalUploadService: ModalUploadService
+    public modalUploadService: ModalUploadService,
+    private router: Router
   ) {
     this.activatedRoute.params.subscribe(params => {
       if (params.id !== 'nuevo') {
         this.medicoService.getMedico(params.id).subscribe((medico: any) => {
           this.medico = medico;
+          this.medico.hospital = medico.hospital._id;
+          this.hospitalService.getHospital(this.medico.hospital).subscribe(hospital => (this.hospital = hospital));
         });
       }
     });
@@ -41,9 +45,13 @@ export class MedicoComponent implements OnInit {
     this.hospitalService.getHospitales().subscribe((resp: any) => {
       this.hospitales = resp.hospitales;
     });
+
+    this.modalUploadService.notificacion.subscribe((resp: any) => (this.medico.img = resp.medico.img));
   }
 
-  actualizarImagen() {}
+  actualizarImagen() {
+    this.modalUploadService.mostarModal('medico', this.medico._id);
+  }
 
   imagenMedicoSeleccionada(archivo: File) {
     if (!archivo) {
@@ -95,11 +103,22 @@ export class MedicoComponent implements OnInit {
 
   actualizar(form: NgForm) {
     if (form.valid) {
-      this.medicoService.agregarMedico(this.medico).subscribe((resp: any) => (this.medico = resp.medico));
+      if (this.medico._id.length === 0) {
+        this.medicoService.agregarMedico(this.medico).subscribe((resp: any) => {
+          this.medico = resp.medico;
+          this.router.navigate(['/medico', this.medico._id]);
+        });
+      } else {
+        this.medicoService.actualizarMedico(this.medico).subscribe();
+      }
     }
   }
 
-  cambioHospital(event) {
-    console.log(event);
+  cambioHospital(id: string) {
+    if (id.length > 0) {
+      this.hospitalService.getHospital(id).subscribe(hospitalResp => {
+        this.hospital = hospitalResp;
+      });
+    }
   }
 }

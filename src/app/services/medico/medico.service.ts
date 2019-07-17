@@ -48,7 +48,7 @@ export class MedicoService {
 
   actualizarMedico(medico: Medico) {
     const url = URL_SERVICIOS + '/medico/' + medico._id;
-    return this.http.put(url, { medico }, { params: this.paramsToken }).pipe(
+    return this.http.put(url, medico, { params: this.paramsToken }).pipe(
       map(resp => {
         Swal.fire('Medico actualizado', 'Se ha acutalizado correcteamente', 'success');
         return true;
