@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { Usuario } from '../../models/usuario.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { URL_SERVICIOS } from '../../config/config';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { SubirImagenService } from '../subir-imagen/subir-imagen.service';
+import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,12 @@ export class UsuarioService {
   usuario: Usuario;
   token: string;
   params: HttpParams;
+  menu: any = {};
 
   constructor(private http: HttpClient, private router: Router, private subirImagenService: SubirImagenService) {
     this.usuario = sessionStorage.getItem('usuario') ? JSON.parse(sessionStorage.getItem('usuario')) : null;
     this.token = sessionStorage.getItem('token') || '';
+    this.menu = sessionStorage.getItem('menu') ? JSON.parse(sessionStorage.getItem('menu')) : [];
     this.params = new HttpParams().set('token', this.token);
   }
 
@@ -38,6 +41,10 @@ export class UsuarioService {
           text: 'Usuario creado correctamente'
         });
         return resp.usuario;
+      }),
+      catchError(err => {
+        Swal.fire(err.error.mensaje, err.error.error.message, 'error');
+        return throwError(err);
       })
     );
   }
@@ -56,6 +63,10 @@ export class UsuarioService {
           title: 'Usuario Actualizado',
           text: 'Campos actualizados correctamente'
         });
+      }),
+      catchError(err => {
+        Swal.fire(err.error.error.mensaje);
+        return throwError(err);
       })
     );
   }
@@ -69,7 +80,11 @@ export class UsuarioService {
       map(resp => {
         this.registrarUsuario(resp);
         return true;
-      })
+      }),
+      // ============================== MANEJO DE ERRORES -- Con of([]) ==============================
+      /* Con este metodo no se requiere enviar un Observable, sino un arreglo de codigos que se iran
+        ejecutando o envier un arreglo vacio [] el cual no envia información */
+      catchError(err => of([console.log('HTTP Error', err.status)]))
     );
   }
 
@@ -81,8 +96,17 @@ export class UsuarioService {
     return this.http.post(url, { email, password }).pipe(
       map(resp => {
         this.registrarUsuario(resp);
-
         return true;
+      }),
+      catchError(err => {
+        // ============================== MANEJO DE ERRORES -- Con throwError() ==============================
+        Swal.fire('Sin acceso', err.error.mensaje, 'error');
+        return throwError(err);
+        // of([
+        //   Swal.fire('Sin acceso', err.error.mensaje, 'error'),
+        //   // console.log(err.error.mensaje),
+        //   console.error(err)
+        // ]);
       })
     );
   }
@@ -94,9 +118,11 @@ export class UsuarioService {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('usuario');
     sessionStorage.removeItem('id');
+    sessionStorage.removeItem('menu');
 
     this.usuario = null;
     this.token = '';
+    this.menu = [];
 
     this.router.navigate(['/login']);
   }
@@ -115,6 +141,10 @@ export class UsuarioService {
     if (resp.usuario) {
       sessionStorage.setItem('usuario', JSON.stringify(resp.usuario));
       this.usuario = resp.usuario;
+    }
+    if (resp.menu) {
+      sessionStorage.setItem('menu', JSON.stringify(resp.menu));
+      this.menu = resp.menu;
     }
   }
 

@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="medico.nombre" class="col-sm-12 col-lg-6 card">
+            <div *ngIf="medico._id" class="col-sm-12 col-lg-6 card">
                 <div class="card-body selector" (click)="actualizarImagen()">
                     <h4 class="card-title">Fotografía de Médico</h4>
                     <h6 *ngIf="!medico.nombre" class="card-subtitle">Nombre del Médico</h6>

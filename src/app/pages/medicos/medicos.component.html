@@ -69,14 +69,14 @@
                                     [value]="medico.nombre"
                                 />
                             </td>
-                            <td *ngIf="medico.hospital">
+                            <td class="align-middle" *ngIf="medico.hospital">
                                 {{ medico.hospital.nombre }}
                             </td>
-                            <td *ngIf="!medico.hospital">
+                            <td class="align-middle" *ngIf="!medico.hospital">
                                 Sin asignar
                             </td>
-                            <td>
-                                <div class="align-middle wid-150">
+                            <td class="align-middle">
+                                <div class="wid-150">
                                     <button [routerLink]="['/medico', medico._id]" class="btn btn-facebook">
                                         <i class="fa fa-edit"></i>
                                     </button>

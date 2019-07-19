@@ -32,6 +32,11 @@ input[type='number'] {
   height: 75px;
 }
 
+.img-50 {
+  width: 50px;
+  height: 50px;
+}
+
 .wid-100 {
   width: 100px;
 }

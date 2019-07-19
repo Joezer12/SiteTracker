@@ -7,7 +7,7 @@ export class Medico {
     public img?: string,
     // tslint:disable-next-line: variable-name
     public _id?: string,
-    public hospital?: string,
+    public hospital?: any,
     public usuario?: string
   ) {}
 }

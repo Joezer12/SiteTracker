@@ -34,7 +34,7 @@ export class MedicoComponent implements OnInit {
       if (params.id !== 'nuevo') {
         this.medicoService.getMedico(params.id).subscribe((medico: any) => {
           this.medico = medico;
-          this.medico.hospital = medico.hospital._id;
+          this.medico.hospital = String(medico.hospital._id);
           this.hospitalService.getHospital(this.medico.hospital).subscribe(hospital => (this.hospital = hospital));
         });
       }

@@ -15,6 +15,8 @@ import { HospitalesComponent } from './hospitales/hospitales.component';
 import { MedicosComponent } from './medicos/medicos.component';
 import { Title } from '@angular/platform-browser';
 import { MedicoComponent } from './medicos/medico.component';
+import { BusquedaComponent } from './busqueda/busqueda.component';
+import { AdminGuard } from '../services/guard/admin.guard';
 
 const pagesRoutes: Routes = [
   {
@@ -53,12 +55,19 @@ const pagesRoutes: Routes = [
         component: ProfileComponent,
         data: { titulo: 'Perfil', path: ['Perfil'] }
       },
+      {
+        path: 'busqueda/:termino',
+        component: BusquedaComponent,
+        data: { titulo: 'Buscador', path: ['Buscador'] }
+      },
       // ============================== MANTENIMIENTO ==============================
       {
         path: 'usuarios',
         component: UsuariosComponent,
+        canActivate: [AdminGuard],
         data: { titulo: 'Usuarios', path: ['Mantenimiento', 'Usuarios'] }
       },
+
       {
         path: 'hospitales',
         component: HospitalesComponent,

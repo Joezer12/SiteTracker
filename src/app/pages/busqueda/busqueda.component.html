@@ -1,0 +1,74 @@
+<div class="row" *ngIf="loading">
+    <div class="col-12 class alert-info text-center py-3">
+        <strong class="font-bold">Cargando</strong>
+        <br />
+        <i class="fa fa-refresh fa-spin fa-2x my-3"></i>
+        <br />
+        <span>Espere por favor</span>
+    </div>
+</div>
+<div class="row" *ngIf="!loading">
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Usuarios</h4>
+                <p *ngIf="usuarios.length === 0; else usuariosTable" class="card-text text-center my-5">Sin resultados</p>
+                <ng-template #usuariosTable>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr *ngFor="let usuario of usuarios">
+                                <td class="align-middle"><img class="img-50" [src]="usuario.img | imagen" /></td>
+                                <td class="align-middle">{{ usuario.nombre }}</td>
+                                <td>
+                                    <button class="btn btn-info"><i class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Hospitales</h4>
+                <p *ngIf="hospitales.length === 0; else hospitalesTable" class="card-text text-center my-5">Sin resultados</p>
+                <ng-template #hospitalesTable>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr *ngFor="let hospital of hospitales">
+                                <td class="align-middle"><img class="img-50" [src]="hospital.img | imagen: 'hospital'" /></td>
+                                <td class="align-middle">{{ hospital.nombre }}</td>
+                                <td>
+                                    <button class="btn btn-info"><i class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Médicos</h4>
+                <p *ngIf="medicos.length === 0; else medicosTable" class="card-text text-center my-5">Sin resultados</p>
+                <ng-template #medicosTable>
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr *ngFor="let medico of medicos">
+                                <td class="align-middle"><img class="img-50" [src]="medico.img | imagen: 'medico'" /></td>
+                                <td class="align-middle">{{ medico.nombre }}</td>
+                                <td>
+                                    <button class="btn btn-info"><i class="fa fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
