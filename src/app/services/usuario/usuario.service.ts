@@ -6,7 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { SubirImagenService } from '../subir-imagen/subir-imagen.service';
-import { Observable, of, throwError } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +30,23 @@ export class UsuarioService {
   }
 
   // ===================================================================================================
+  // RENUEVA TOKEN
+  // ===================================================================================================
+  renuevaToken() {
+    const url = URL_SERVICIOS + '/login/renuevatoken';
+
+    return this.http.get(url, { params: this.params }).pipe(
+      map(resp => {
+        this.registrarUsuario(resp);
+        return true;
+      }),
+      catchError(err => {
+        Swal.fire(err.error.mensaje, err.error.error.message, 'error');
+        return throwError(err);
+      })
+    );
+  }
+  // ===================================================================================================
   // REGISTRO -- CREA UN NUEVO USARIO DE LA PAGINA REGISTRO
   // ===================================================================================================
   crearUsuario(usuario: Usuario) {
@@ -43,7 +60,8 @@ export class UsuarioService {
         return resp.usuario;
       }),
       catchError(err => {
-        Swal.fire(err.error.mensaje, err.error.error.message, 'error');
+        Swal.fire('Session invalida', 'No se pudo validar token', 'error');
+        this.logout();
         return throwError(err);
       })
     );
@@ -146,6 +164,7 @@ export class UsuarioService {
       sessionStorage.setItem('menu', JSON.stringify(resp.menu));
       this.menu = resp.menu;
     }
+    this.params = new HttpParams().set('token', this.token);
   }
 
   // ===================================================================================================

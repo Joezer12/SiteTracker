@@ -13,10 +13,10 @@ import { ProfileComponent } from './profile/profile.component';
 import { UsuariosComponent } from './usuarios/usuarios.component';
 import { HospitalesComponent } from './hospitales/hospitales.component';
 import { MedicosComponent } from './medicos/medicos.component';
-import { Title } from '@angular/platform-browser';
 import { MedicoComponent } from './medicos/medico.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AdminGuard } from '../services/guard/admin.guard';
+import { RenuevaTokenGuard } from '../services/guards/renueva-token.guard';
 
 const pagesRoutes: Routes = [
   {
@@ -27,6 +27,7 @@ const pagesRoutes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
+        canActivate: [RenuevaTokenGuard],
         data: { titulo: 'Dashboard', path: ['Principal', 'Dashboard'] }
       },
       {
